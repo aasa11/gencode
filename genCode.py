@@ -6,6 +6,14 @@ Created on 2013/07/23
 '''
 import cData
 
+CHECKSUM = 0
+CHECKGAP = 1
+CHECKCUP = 2
+CHECKODD = 3
+CHECKARR = 4
+CHECKCTN = 5
+CHECKTAIL = 6
+
 class crule:
     def __init__(self):
         self.sumcount = 0
@@ -28,20 +36,28 @@ class crule:
     
     def checkrule(self, d):
         self.matched = 0
+        self.matchlist = [0,0,0,0,0,0,0]
         if  self.checksum(d):
             self.matched += 1
+            self.matchlist[CHECKSUM] = 1
         if  self.checkgap(d):
             self.matched += 1
+            self.matchlist[CHECKGAP] = 1
         if  self.checkcup(d):
             self.matched += 1
+            self.matchlist[CHECKCUP] = 1
         if  self.checkodd(d):
             self.matched += 1
+            self.matchlist[CHECKODD] = 1
         if  self.checkarr(d):
             self.matched += 1
+            self.matchlist[CHECKARR] = 1
         if  self.checkctn(d):
             self.matched += 1
+            self.matchlist[CHECKCTN] = 1
         if  self.checktail(d):
             self.matched += 1
+            self.matchlist[CHECKTAIL] = 1
         
         if self.matched == 7:
             return True

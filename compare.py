@@ -5,11 +5,13 @@ Created on 2013/07/24
 '''
 import cData
 import genCode
+import random
 
 class ccmp:
     def __init__(self, filebase, filereal):
         self.filebase = filebase
         self.filereal = filereal
+        
         
     def impdata(self):
         self.basedata = []
@@ -123,6 +125,7 @@ class cchoice:
         self.incodes = ()
         self.excode = ()
         self.exrange = ()
+        self.chosen = []
         
     def setincludeNum(self, values):
         self.incodes = values
@@ -132,6 +135,9 @@ class cchoice:
         
     def setexcludeRange(self, values):
         self.exrange = values
+        
+    def setrulematchs(self, rulematchs):
+        self.rulematchs = rulematchs
         
     def isIncludeCode(self, d):
         if self.incodes is None or len(self.incodes) <= 0:
@@ -208,6 +214,16 @@ class cchoice:
             if not self.checkcover(cover20, 20):
                 continue
             
+            #rulematch
+            if self.rulematchs is not None and len(self.rulematchs) > 0:
+                isok = True
+                for k, v in self.rulematchs.items():
+                    if not self.checkonekpi(d, k, v):
+                        isok = False
+                        break
+                if not isok:
+                    continue    
+            
             #print data
             oneline = ' data : '
             for i in d.a:
@@ -217,9 +233,11 @@ class cchoice:
             oneline += 'cover: '+str(cover5)+ ' '+str(cover10)+ ' '+str(cover15)+ ' '+str(cover20)+ '\n '
             #print oneline
             f.write(oneline)
+            self.chosen.append(oneline)
             total +=1
         
         f.close()
+        self.totalchosen = total
         print 'total : ', total
         
     def inrange(self,d):
@@ -231,6 +249,45 @@ class cchoice:
     def kpi(self,d):
         self.rule.checkrule(d)    
         return self.rule.matched
+    
+    def checkonekpi(self, d, idx, value):
+        if idx == genCode.CHECKSUM :
+            dt = d.sum()
+            if dt <= value[1] and dt >=value[0]:
+                return True
+            return False
+        elif idx == genCode.CHECKGAP:
+            dt = d.gap()
+            if dt <= value[1] and dt >=value[0]:
+                return True
+            return False
+        elif idx == genCode.CHECKCUP:
+            dt = d.cup()
+            if dt <= value[1] and dt >=value[0]:
+                return True
+            return False
+        elif idx == genCode.CHECKODD:
+            dt = d.odd()
+            if dt ==value:
+                return True
+            return False
+        elif idx == genCode.CHECKARR:
+            dt = d.arr()
+            if dt == value:
+                return True
+            return False
+        elif idx == genCode.CHECKCTN :
+            dt = d.ctn()
+            if dt == value:
+                return True
+            return False
+        elif idx == genCode.CHECKTAIL:
+            dt = d.tail()
+            if dt == value:
+                return True
+            return False
+        else :
+            return True
     
     def checkkpi(self,kpi):
         if kpi >=5 and kpi <=6:
@@ -339,13 +396,26 @@ def main():
 #    cmps.realcover(15)
 #    cmps.realcover(20)
     ch = cchoice(fileout, cmps.realdata)
-    excludedata = (25,21,24,19)
-    includedata = (1, 17,33)
-    excluderange = (123,132,231)
+    excludedata = (1,28)
+    includedata = (3,33)
+    excluderange = (222,)
+    
+#    CHECKSUM = [min, max]  CHECKGAP = [min,max]  
+#    CHECKCUP = [min,max]   CHECKODD = value  
+#    CHECKARR = value  CHECKCTN = value  CHECKTAIL = value   
+    rulematchs = {genCode.CHECKCTN : 0,
+                  genCode.CHECKTAIL : 0}
     ch.setexcludeNum(excludedata)
     ch.setincludeNum(includedata)
     ch.setexcludeRange(excluderange)
+    ch.setrulematchs(rulematchs)
     ch.choose()
+    
+    getcount = 2
+    
+    for _ in xrange(getcount):
+        idx = random.randint(0, ch.totalchosen)
+        print ch.chosen[idx]
     
 #----------------------It is a split line--------------------------------------
 
