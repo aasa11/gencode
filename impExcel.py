@@ -5,7 +5,7 @@ Created on 2013/07/23
 
 @author: huxiufeng
 '''
-#coding=utf-8
+#coding=gbk
 import xlsHelper
 import cData
 
@@ -23,7 +23,7 @@ class cDataImp:
         for i in range(sheetnum):
             xls.getSheet(i+1)
             sheetname = xls.GetSheetName()
-            print sheetname
+            #print sheetname
             if sheetname == self.sheetname :
                 bsheetexist = True
                 break
@@ -89,7 +89,11 @@ class statcode:
         for line in f.readlines():
             data = line.split(' ')
             #print data
-            d = cData.cData(data[0], data[1:],data[6])
+            try :
+                d = cData.cData(data[0], data[1:],data[6])
+            except Exception, e:
+                print "exception is :", e," : data is ",data[0]
+                return
             self.datas.append(d)
             
         f.close()
@@ -101,11 +105,11 @@ class statcode:
     def sumrange(self):
         dictsum = {}
         for d in self.datas :
-            sum = d.sum()
+            sums = d.sum()
             if sum in dictsum.keys() :
-                dictsum[sum] += 1
+                dictsum[sums] += 1
             else :
-                dictsum[sum] = 1
+                dictsum[sums] = 1
         return dictsum
     
     def gaprange(self):

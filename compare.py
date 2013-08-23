@@ -238,7 +238,7 @@ class cchoice:
         
         f.close()
         self.totalchosen = total
-        print 'total : ', total
+        print 'choose total : ', total
         
     def inrange(self,d):
         if d.first()<=6 and d.last()>=28:
@@ -396,9 +396,9 @@ def main():
 #    cmps.realcover(15)
 #    cmps.realcover(20)
     ch = cchoice(fileout, cmps.realdata)
-    excludedata = (1,28)
+    excludedata = (1, 5, 22)
     includedata = (3,33)
-    excluderange = (222,)
+    excluderange = (132,)
     
 #    CHECKSUM = [min, max]  CHECKGAP = [min,max]  
 #    CHECKCUP = [min,max]   CHECKODD = value  
@@ -411,7 +411,7 @@ def main():
     ch.setrulematchs(rulematchs)
     ch.choose()
     
-    getcount = 2
+    getcount = 5
     
     for _ in xrange(getcount):
         idx = random.randint(0, ch.totalchosen)

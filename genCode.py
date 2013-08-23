@@ -152,11 +152,8 @@ class genCode:
                 return now
             else:
                 return None
-
-#----------------------It is a split line--------------------------------------
-
-def main():
-    filename = r'choose.txt'
+            
+def dochoosetxt(filename):
     gen = genCode(33, 6)
     f = open(filename, 'w')
     rule = crule()
@@ -185,8 +182,14 @@ def main():
     print gen.total
     print matched
     rule.printstat()
-    for k,v in dictpart.items():
-        print "k : ", k, ", v : ", v
+#    for k,v in dictpart.items():
+#        print "k : ", k, ", v : ", v
+
+#----------------------It is a split line--------------------------------------
+
+def main():
+    filename = r'choose.txt'
+    dochoosetxt(filename)
     
 #----------------------It is a split line--------------------------------------
 
